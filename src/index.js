@@ -1,7 +1,25 @@
-import express from "express";
-import {ratelimiter} from "express-rate-limit";
+import app from "./app.js";
+
+import dotenv from "dotenv"
+import connectDb from "./db/index.js";
+
+dotenv.config({
+    path:"./.env"
+})
 
 
-const app = express();
 
-app.listen(3000);
+const PORT  = process.env.PORT || 5000
+
+connectDb()
+           .then(()=>{
+            app.listen(PORT,()=>{
+    console.log(`Server is running on port ${PORT}`);
+})
+           })
+           .catch((err)=>{
+            console.error("Failed to connect to MongoDB", err);
+            process.exit(1);
+           });
+           
+
